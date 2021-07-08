@@ -192,7 +192,7 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
             await showModalBottomSheet<OptionItem>(
               context: context,
               isScrollControlled: true,
-              useRootNavigator: true,
+              useRootNavigator: chewieController.useRootNavigator,
               builder: (context) => OptionsDialog(
                 options: options,
                 cancelButtonText: chewieController.optionsTranslation?.cancelButtonText,
@@ -359,7 +359,7 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
     final chosenSpeed = await showModalBottomSheet<double>(
       context: context,
       isScrollControlled: true,
-      useRootNavigator: true,
+      useRootNavigator: chewieController.useRootNavigator,
       builder: (context) => PlaybackSpeedDialog(
         speeds: chewieController.playbackSpeeds,
         selected: _latestValue.playbackSpeed,

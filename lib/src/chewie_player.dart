@@ -70,7 +70,10 @@ class ChewieState extends State<Chewie> {
       _isFullScreen = true;
       await _pushFullScreenWidget(context);
     } else if (_isFullScreen) {
-      Navigator.of(context, rootNavigator: true).pop();
+      Navigator.of(
+        context,
+        rootNavigator: widget.controller.useRootNavigator,
+      ).pop();
       _isFullScreen = false;
     }
   }
@@ -146,7 +149,10 @@ class ChewieState extends State<Chewie> {
       Wakelock.enable();
     }
 
-    await Navigator.of(context, rootNavigator: true).push(route);
+    await Navigator.of(
+      context,
+      rootNavigator: widget.controller.useRootNavigator,
+    ).push(route);
     _isFullScreen = false;
     widget.controller.exitFullScreen();
 
@@ -242,6 +248,7 @@ class ChewieController extends ChangeNotifier {
     this.allowMuting = true,
     this.allowPlaybackSpeedChanging = false,
     this.showCupertinoSkipOptions = false,
+    this.useRootNavigator = true,
     this.playbackSpeeds = const [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
     this.systemOverlaysOnEnterFullScreen,
     this.deviceOrientationsOnEnterFullScreen,
@@ -286,6 +293,7 @@ class ChewieController extends ChangeNotifier {
     bool? allowFullScreen,
     bool? allowMuting,
     bool? allowPlaybackSpeedChanging,
+    bool? useRootNavigator,
     List<double>? playbackSpeeds,
     List<SystemUiOverlay>? systemOverlaysOnEnterFullScreen,
     List<DeviceOrientation>? deviceOrientationsOnEnterFullScreen,
@@ -324,6 +332,7 @@ class ChewieController extends ChangeNotifier {
       allowFullScreen: allowFullScreen ?? this.allowFullScreen,
       allowMuting: allowMuting ?? this.allowMuting,
       allowPlaybackSpeedChanging: allowPlaybackSpeedChanging ?? this.allowPlaybackSpeedChanging,
+      useRootNavigator: useRootNavigator ?? this.useRootNavigator,
       playbackSpeeds: playbackSpeeds ?? this.playbackSpeeds,
       systemOverlaysOnEnterFullScreen: systemOverlaysOnEnterFullScreen ?? this.systemOverlaysOnEnterFullScreen,
       deviceOrientationsOnEnterFullScreen:
@@ -455,6 +464,9 @@ class ChewieController extends ChangeNotifier {
 
   /// Defines if the playback speed control should be shown
   final bool allowPlaybackSpeedChanging;
+
+  /// Defines if push/pop navigations use the rootNavigator
+  final bool useRootNavigator;
 
   /// Defines the set of allowed playback speeds user can change
   final List<double> playbackSpeeds;
