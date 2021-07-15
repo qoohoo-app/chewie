@@ -19,11 +19,13 @@ class CupertinoControls extends StatefulWidget {
   const CupertinoControls({
     required this.backgroundColor,
     required this.iconColor,
+    this.showPlayButton = true,
     Key? key,
   }) : super(key: key);
 
   final Color backgroundColor;
   final Color iconColor;
+  final bool showPlayButton;
 
   @override
   State<StatefulWidget> createState() {
@@ -46,6 +48,7 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
   bool _displayBufferingIndicator = false;
 
   late VideoPlayerController controller;
+
   // We know that _chewieController is set in didChangeDependencies
   ChewieController get chewieController => _chewieController!;
   ChewieController? _chewieController;
@@ -291,6 +294,8 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
 
   Widget _buildHitArea() {
     final bool isFinished = _latestValue.position >= _latestValue.duration;
+    final bool showPlayButton =
+        widget.showPlayButton && !_latestValue.isPlaying && !_dragging;
 
     return GestureDetector(
       onTap: _latestValue.isPlaying
@@ -307,7 +312,7 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
         iconColor: widget.iconColor,
         isFinished: isFinished,
         isPlaying: controller.value.isPlaying,
-        show: !_latestValue.isPlaying && !_dragging,
+        show: showPlayButton,
         onPressed: _playPause,
       ),
     );
