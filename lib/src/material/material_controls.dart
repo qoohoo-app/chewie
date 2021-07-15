@@ -16,7 +16,12 @@ import 'package:video_player/video_player.dart';
 import 'widgets/playback_speed_dialog.dart';
 
 class MaterialControls extends StatefulWidget {
-  const MaterialControls({Key? key}) : super(key: key);
+  const MaterialControls({
+    this.showPlayButton = true,
+    Key? key,
+  }) : super(key: key);
+
+  final bool showPlayButton;
 
   @override
   State<StatefulWidget> createState() {
@@ -363,6 +368,8 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
 
   Widget _buildHitArea() {
     final bool isFinished = _latestValue.position >= _latestValue.duration;
+    final bool showPlayButton =
+        widget.showPlayButton && !_dragging && !notifier.hideStuff;
 
     return GestureDetector(
       onTap: () {
@@ -387,7 +394,7 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
         iconColor: Colors.white,
         isFinished: isFinished,
         isPlaying: controller.value.isPlaying,
-        show: !_dragging && !notifier.hideStuff,
+        show: showPlayButton,
         onPressed: _playPause,
       ),
     );
