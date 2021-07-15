@@ -17,7 +17,12 @@ import 'package:video_player/video_player.dart';
 import 'widgets/playback_speed_dialog.dart';
 
 class MaterialDesktopControls extends StatefulWidget {
-  const MaterialDesktopControls({Key? key}) : super(key: key);
+  const MaterialDesktopControls({
+    this.showPlayButton = true,
+    Key? key,
+  }) : super(key: key);
+
+  final bool showPlayButton;
 
   @override
   State<StatefulWidget> createState() {
@@ -311,6 +316,8 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
 
   Widget _buildHitArea() {
     final bool isFinished = _latestValue.position >= _latestValue.duration;
+    final bool showPlayButton =
+        widget.showPlayButton && !_dragging && !notifier.hideStuff;
 
     return GestureDetector(
       onTap: () {
@@ -335,7 +342,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
         iconColor: Colors.white,
         isFinished: isFinished,
         isPlaying: controller.value.isPlaying,
-        show: !_dragging && !notifier.hideStuff,
+        show: showPlayButton,
         onPressed: _playPause,
       ),
     );
