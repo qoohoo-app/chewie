@@ -262,16 +262,13 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
                       )
                     : Row(
                         children: <Widget>[
-                          if (chewieController.showCupertinoSkipOptions)
-                            _buildSkipBack(iconColor, barHeight),
+                          if (chewieController.showCupertinoSkipOptions) _buildSkipBack(iconColor, barHeight),
                           _buildPlayPause(controller, iconColor, barHeight),
-                          if (chewieController.showCupertinoSkipOptions)
-                            _buildSkipForward(iconColor, barHeight),
+                          if (chewieController.showCupertinoSkipOptions) _buildSkipForward(iconColor, barHeight),
                           _buildPosition(iconColor),
                           _buildProgressBar(),
                           _buildRemaining(iconColor),
-                          if(chewieController.showSubtitleToggle)
-                            _buildSubtitleToggle(iconColor, barHeight),
+                          if (chewieController.showSubtitleToggle) _buildSubtitleToggle(iconColor, barHeight),
                           if (chewieController.allowPlaybackSpeedChanging)
                             _buildSpeedButton(controller, iconColor, barHeight),
                           if (chewieController.additionalOptions != null &&
@@ -710,6 +707,8 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
         notifier.hideStuff = false;
         _hideTimer?.cancel();
         controller.pause();
+
+        chewieController.onPause?.call();
       } else {
         _cancelAndRestartTimer();
 
@@ -723,6 +722,8 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
           }
           controller.play();
         }
+
+        chewieController.onPlay?.call();
       }
     });
   }

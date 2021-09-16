@@ -279,7 +279,11 @@ class ChewieController extends ChangeNotifier {
     this.systemOverlaysAfterFullScreen = SystemUiOverlay.values,
     this.deviceOrientationsAfterFullScreen = DeviceOrientation.values,
     this.routePageBuilder,
-  }) : assert(playbackSpeeds.every((speed) => speed > 0), 'The playbackSpeeds values must all be greater than 0',
+    this.onPlay,
+    this.onPause,
+    this.onReplay,
+  }) : assert(playbackSpeeds.every((speed) => speed > 0),
+            'The playbackSpeeds values must all be greater than 0',
         ) {
     _initialize();
   }
@@ -328,6 +332,9 @@ class ChewieController extends ChangeNotifier {
       ChewieControllerProvider,
     )?
         routePageBuilder,
+    VoidCallback? onPlay,
+    VoidCallback? onPause,
+    VoidCallback? onReplay,
   }) {
     return ChewieController(
       videoPlayerController: videoPlayerController ?? this.videoPlayerController,
@@ -366,6 +373,9 @@ class ChewieController extends ChangeNotifier {
       routePageBuilder: routePageBuilder ?? this.routePageBuilder,
       showSubtitleToggle: showSubtitleToggle ?? this.showSubtitleToggle,
       showCupertinoSkipOptions: showCupertinoSkipOptions ?? this.showCupertinoSkipOptions,
+      onPlay: onPlay ?? this.onPlay,
+      onPause: onPause ?? this.onPause,
+      onReplay: onReplay ?? this.onReplay,
     );
   }
 
@@ -380,6 +390,12 @@ class ChewieController extends ChangeNotifier {
   /// If false, the skip button in Cupertino
   /// won't be shown.
   final bool showCupertinoSkipOptions;
+
+  final VoidCallback? onPlay;
+
+  final VoidCallback? onPause;
+
+  final VoidCallback? onReplay;
 
   /// Pass your translations for the options like:
   /// - PlaybackSpeed
