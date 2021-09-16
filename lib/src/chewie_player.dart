@@ -250,7 +250,8 @@ class ChewieController extends ChangeNotifier {
     this.onPlay,
     this.onPause,
     this.onReplay,
-  }) : assert(playbackSpeeds.every((speed) => speed > 0), 'The playbackSpeeds values must all be greater than 0') {
+  }) : assert(playbackSpeeds.every((speed) => speed > 0),
+            'The playbackSpeeds values must all be greater than 0') {
     _initialize();
   }
 
