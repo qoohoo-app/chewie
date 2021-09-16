@@ -722,6 +722,8 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
         notifier.hideStuff = false;
         _hideTimer?.cancel();
         controller.pause();
+
+        chewieController.onPause?.call();
       } else {
         _cancelAndRestartTimer();
 
@@ -735,6 +737,8 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
           }
           controller.play();
         }
+
+        chewieController.onPlay?.call();
       }
     });
   }
