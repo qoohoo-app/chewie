@@ -289,7 +289,6 @@ class ChewieController extends ChangeNotifier {
     List<SystemUiOverlay>? systemOverlaysAfterFullScreen,
     List<DeviceOrientation>? deviceOrientationsAfterFullScreen,
     Widget Function(BuildContext, Animation<double>, Animation<double>, _ChewieControllerProvider)? routePageBuilder,
-    bool? showCupertinoMuteOption,
     VoidCallback? onPlay,
     VoidCallback? onPause,
     VoidCallback? onReplay,
