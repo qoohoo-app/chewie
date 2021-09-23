@@ -404,10 +404,13 @@ class ChewieController extends ChangeNotifier {
   /// won't be shown.
   final bool showCupertinoSkipOptions;
 
+  /// On video play callback
   final VoidCallback? onPlay;
 
+  /// On video pause callback
   final VoidCallback? onPause;
 
+  /// On video replay callback
   final VoidCallback? onReplay;
 
   /// Pass your translations for the options like:
