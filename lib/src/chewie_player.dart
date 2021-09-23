@@ -250,8 +250,7 @@ class ChewieController extends ChangeNotifier {
     this.onPlay,
     this.onPause,
     this.onReplay,
-  }) : assert(playbackSpeeds.every((speed) => speed > 0),
-            'The playbackSpeeds values must all be greater than 0') {
+  }) : assert(playbackSpeeds.every((speed) => speed > 0), 'The playbackSpeeds values must all be greater than 0') {
     _initialize();
   }
 
@@ -348,10 +347,13 @@ class ChewieController extends ChangeNotifier {
   /// won't be shown.
   final bool showCupertinoSkipOptions;
 
+  /// On video play callback
   final VoidCallback? onPlay;
 
+  /// On video pause callback
   final VoidCallback? onPause;
 
+  /// On video replay callback
   final VoidCallback? onReplay;
 
   /// Pass your translations for the options like:
