@@ -212,45 +212,46 @@ class ChewieState extends State<Chewie> {
 /// player, please use the standard information provided by the
 /// `VideoPlayerController`.
 class ChewieController extends ChangeNotifier {
-  ChewieController({
-    required this.videoPlayerController,
-    this.optionsTranslation,
-    this.aspectRatio,
-    this.autoInitialize = false,
-    this.autoPlay = false,
-    this.startAt,
-    this.looping = false,
-    this.fullScreenByDefault = false,
-    this.cupertinoProgressColors,
-    this.materialProgressColors,
-    this.placeholder,
-    this.overlay,
-    this.showControlsOnInitialize = true,
-    this.showOptions = false,
-    this.showSubtitleToggle = false,
-    this.optionsBuilder,
-    this.additionalOptions,
-    this.showControls = true,
-    this.subtitle,
-    this.subtitleBuilder,
-    this.customControls,
-    this.errorBuilder,
-    this.allowedScreenSleep = true,
-    this.isLive = false,
-    this.allowFullScreen = true,
-    this.allowMuting = true,
-    this.allowPlaybackSpeedChanging = false,
-    this.showCupertinoSkipOptions = false,
-    this.playbackSpeeds = const [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
-    this.systemOverlaysOnEnterFullScreen,
-    this.deviceOrientationsOnEnterFullScreen,
-    this.systemOverlaysAfterFullScreen = SystemUiOverlay.values,
-    this.deviceOrientationsAfterFullScreen = DeviceOrientation.values,
-    this.routePageBuilder,
-    this.onPlay,
-    this.onPause,
-    this.onReplay,
-  }) : assert(playbackSpeeds.every((speed) => speed > 0), 'The playbackSpeeds values must all be greater than 0') {
+  ChewieController(
+      {required this.videoPlayerController,
+      this.optionsTranslation,
+      this.aspectRatio,
+      this.autoInitialize = false,
+      this.autoPlay = false,
+      this.startAt,
+      this.looping = false,
+      this.fullScreenByDefault = false,
+      this.cupertinoProgressColors,
+      this.materialProgressColors,
+      this.placeholder,
+      this.overlay,
+      this.showControlsOnInitialize = true,
+      this.showOptions = false,
+      this.showSubtitleToggle = false,
+      this.optionsBuilder,
+      this.additionalOptions,
+      this.showControls = true,
+      this.subtitle,
+      this.subtitleBuilder,
+      this.customControls,
+      this.errorBuilder,
+      this.allowedScreenSleep = true,
+      this.isLive = false,
+      this.allowFullScreen = true,
+      this.allowMuting = true,
+      this.allowPlaybackSpeedChanging = false,
+      this.showCupertinoSkipOptions = false,
+      this.playbackSpeeds = const [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
+      this.systemOverlaysOnEnterFullScreen,
+      this.deviceOrientationsOnEnterFullScreen,
+      this.systemOverlaysAfterFullScreen = SystemUiOverlay.values,
+      this.deviceOrientationsAfterFullScreen = DeviceOrientation.values,
+      this.routePageBuilder,
+      this.onPlay,
+      this.onPause,
+      this.onReplay,
+      this.onFullScreen})
+      : assert(playbackSpeeds.every((speed) => speed > 0), 'The playbackSpeeds values must all be greater than 0') {
     _initialize();
   }
 
@@ -292,6 +293,7 @@ class ChewieController extends ChangeNotifier {
     VoidCallback? onPlay,
     VoidCallback? onPause,
     VoidCallback? onReplay,
+    void Function(bool isFullScreen)? onFullScreen,
   }) {
     return ChewieController(
       videoPlayerController: videoPlayerController ?? this.videoPlayerController,
@@ -332,6 +334,7 @@ class ChewieController extends ChangeNotifier {
       onPlay: onPlay ?? this.onPlay,
       onPause: onPause ?? this.onPause,
       onReplay: onReplay ?? this.onReplay,
+      onFullScreen: onFullScreen ?? this.onFullScreen,
     );
   }
 
@@ -355,6 +358,9 @@ class ChewieController extends ChangeNotifier {
 
   /// On video replay callback
   final VoidCallback? onReplay;
+
+  ///On video fullscreen callback
+  final void Function(bool isFullScreen)? onFullScreen;
 
   /// Pass your translations for the options like:
   /// - PlaybackSpeed
@@ -523,6 +529,8 @@ class ChewieController extends ChangeNotifier {
   void toggleFullScreen() {
     _isFullScreen = !_isFullScreen;
     notifyListeners();
+
+    onFullScreen?.call(_isFullScreen);
   }
 
   void togglePause() {
