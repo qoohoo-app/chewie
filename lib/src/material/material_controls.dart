@@ -42,6 +42,7 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
 
   late VideoPlayerController controller;
   ChewieController? _chewieController;
+
   // We know that _chewieController is set in didChangeDependencies
   ChewieController get chewieController => _chewieController!;
 
