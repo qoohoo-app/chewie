@@ -42,7 +42,7 @@ class Chewie extends StatefulWidget {
 class ChewieState extends State<Chewie> {
   bool _isFullScreen = false;
 
-  bool get isFullScreen => widget.controller.isFullScreen;
+  bool get isControllerFullScreen => widget.controller.isFullScreen;
   late PlayerNotifier notifier;
 
   @override
@@ -64,22 +64,22 @@ class ChewieState extends State<Chewie> {
       widget.controller.addListener(listener);
     }
     super.didUpdateWidget(oldWidget);
-    if (_isFullScreen != isFullScreen) {
+    if (_isFullScreen != isControllerFullScreen) {
       widget.controller._isFullScreen = _isFullScreen;
     }
   }
 
   Future<void> listener() async {
-    if (isFullScreen && !_isFullScreen) {
-      _isFullScreen = isFullScreen;
+    if (isControllerFullScreen && !_isFullScreen) {
+      _isFullScreen = isControllerFullScreen;
       await _pushFullScreenWidget(context);
-    } else if (!isFullScreen && _isFullScreen) {
+    } else if (!isControllerFullScreen && _isFullScreen) {
       if (Navigator.of(context).canPop()) {
         Navigator.of(
           context,
           rootNavigator: widget.controller.useRootNavigator,
         ).pop();
-        _isFullScreen = isFullScreen;
+        _isFullScreen = isControllerFullScreen;
       }
     }
   }
