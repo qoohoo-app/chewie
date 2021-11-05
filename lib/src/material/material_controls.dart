@@ -29,7 +29,7 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
   late VideoPlayerValue _latestValue;
   Timer? _hideTimer;
   Timer? _initTimer;
-  late var _subtitlesPosition = const Duration();
+  late var _subtitlesPosition = Duration.zero;
   bool _subtitleOn = false;
   Timer? _showAfterExpandCollapseTimer;
   bool _dragging = false;
@@ -91,7 +91,10 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
                 children: <Widget>[
                   if (_subtitleOn)
                     Transform.translate(
-                      offset: Offset(0.0, notifier.hideStuff ? barHeight * 0.8 : 0.0),
+                      offset: Offset(
+                        0.0,
+                        notifier.hideStuff ? barHeight * 0.8 : 0.0,
+                      ),
                       child: _buildSubtitles(context, chewieController.subtitle!),
                     ),
                   _buildBottomBar(context),
@@ -490,7 +493,7 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
           });
         } else {
           if (isFinished) {
-            controller.seekTo(const Duration());
+            controller.seekTo(Duration.zero);
 
             chewieController.onReplay?.call();
           }
@@ -562,8 +565,8 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
         },
         colors: chewieController.materialProgressColors ??
             ChewieProgressColors(
-              playedColor: Theme.of(context).accentColor,
-              handleColor: Theme.of(context).accentColor,
+              playedColor: Theme.of(context).colorScheme.secondary,
+              handleColor: Theme.of(context).colorScheme.secondary,
               bufferedColor: Theme.of(context).backgroundColor.withOpacity(0.5),
               backgroundColor: Theme.of(context).disabledColor.withOpacity(.5),
             ),

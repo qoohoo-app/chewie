@@ -99,11 +99,19 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  _buildTopBar(backgroundColor, iconColor, barHeight, buttonPadding),
+                  _buildTopBar(
+                    backgroundColor,
+                    iconColor,
+                    barHeight,
+                    buttonPadding,
+                  ),
                   const Spacer(),
                   if (_subtitleOn)
                     Transform.translate(
-                      offset: Offset(0.0, notifier.hideStuff ? barHeight * 0.8 : 0.0),
+                      offset: Offset(
+                        0.0,
+                        notifier.hideStuff ? barHeight * 0.8 : 0.0,
+                      ),
                       child: _buildSubtitles(chewieController.subtitle!),
                     ),
                   _buildBottomBar(backgroundColor, iconColor, barHeight),
@@ -166,7 +174,10 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
       padding: EdgeInsets.only(left: marginSize, right: marginSize),
       child: Container(
         padding: const EdgeInsets.all(5),
-        decoration: BoxDecoration(color: const Color(0x96000000), borderRadius: BorderRadius.circular(10.0)),
+        decoration: BoxDecoration(
+          color: const Color(0x96000000),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
         child: Text(
           currentSubtitle.first!.text.toString(),
           style: const TextStyle(
@@ -538,10 +549,21 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
       child: Row(
         children: <Widget>[
           if (chewieController.allowFullScreen)
-            _buildExpandButton(backgroundColor, iconColor, barHeight, buttonPadding),
+            _buildExpandButton(
+              backgroundColor,
+              iconColor,
+              barHeight,
+              buttonPadding,
+            ),
           const Spacer(),
           if (chewieController.allowMuting)
-            _buildMuteButton(controller, backgroundColor, iconColor, barHeight, buttonPadding),
+            _buildMuteButton(
+              controller,
+              backgroundColor,
+              iconColor,
+              barHeight,
+              buttonPadding,
+            ),
         ],
       ),
     );
@@ -660,7 +682,7 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
           });
         } else {
           if (isFinished) {
-            controller.seekTo(const Duration());
+            controller.seekTo(Duration.zero);
           }
           controller.play();
         }
@@ -672,7 +694,7 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
 
   void _skipBack() {
     _cancelAndRestartTimer();
-    final beginning = const Duration().inMilliseconds;
+    final beginning = Duration.zero.inMilliseconds;
     final skip = (_latestValue.position - const Duration(seconds: 15)).inMilliseconds;
     controller.seekTo(Duration(milliseconds: math.max(skip, beginning)));
   }

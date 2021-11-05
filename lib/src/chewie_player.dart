@@ -132,9 +132,19 @@ class ChewieState extends State<Chewie> {
     );
 
     if (widget.controller.routePageBuilder == null) {
-      return _defaultRoutePageBuilder(context, animation, secondaryAnimation, controllerProvider);
+      return _defaultRoutePageBuilder(
+        context,
+        animation,
+        secondaryAnimation,
+        controllerProvider,
+      );
     }
-    return widget.controller.routePageBuilder!(context, animation, secondaryAnimation, controllerProvider);
+    return widget.controller.routePageBuilder!(
+      context,
+      animation,
+      secondaryAnimation,
+      controllerProvider,
+    );
   }
 
   Future<dynamic> _pushFullScreenWidget(BuildContext context) async {
@@ -160,8 +170,13 @@ class ChewieState extends State<Chewie> {
     // so we do not need to check Wakelock.isEnabled.
     Wakelock.disable();
 
-    SystemChrome.setEnabledSystemUIOverlays(widget.controller.systemOverlaysAfterFullScreen);
-    SystemChrome.setPreferredOrientations(widget.controller.deviceOrientationsAfterFullScreen);
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: widget.controller.systemOverlaysAfterFullScreen,
+    );
+    SystemChrome.setPreferredOrientations(
+      widget.controller.deviceOrientationsAfterFullScreen,
+    );
   }
 
   void onEnterFullScreen() {
@@ -170,15 +185,20 @@ class ChewieState extends State<Chewie> {
 
     if (widget.controller.systemOverlaysOnEnterFullScreen != null) {
       /// Optional user preferred settings
-      SystemChrome.setEnabledSystemUIOverlays(widget.controller.systemOverlaysOnEnterFullScreen!);
+      SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.manual,
+        overlays: widget.controller.systemOverlaysOnEnterFullScreen,
+      );
     } else {
       /// Default behavior
-      SystemChrome.setEnabledSystemUIOverlays([]);
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     }
 
     if (widget.controller.deviceOrientationsOnEnterFullScreen != null) {
       /// Optional user preferred settings
-      SystemChrome.setPreferredOrientations(widget.controller.deviceOrientationsOnEnterFullScreen!);
+      SystemChrome.setPreferredOrientations(
+        widget.controller.deviceOrientationsOnEnterFullScreen!,
+      );
     } else {
       final isLandscapeVideo = videoWidth > videoHeight;
       final isPortraitVideo = videoWidth < videoHeight;
@@ -304,6 +324,13 @@ class ChewieController extends ChangeNotifier {
     VoidCallback? onPlay,
     VoidCallback? onPause,
     VoidCallback? onReplay,
+    Widget Function(
+      BuildContext,
+      Animation<double>,
+      Animation<double>,
+      _ChewieControllerProvider,
+    )?
+        routePageBuilder,
   }) {
     return ChewieController(
       videoPlayerController: videoPlayerController ?? this.videoPlayerController,
@@ -386,7 +413,10 @@ class ChewieController extends ChangeNotifier {
   /// the builder method. Just add your own options to the Widget
   /// you'll build. If you want to hide the chewieOptions, just leave them
   /// out from your Widget.
-  final Future<void> Function(BuildContext context, List<OptionItem> chewieOptions)? optionsBuilder;
+  final Future<void> Function(
+    BuildContext context,
+    List<OptionItem> chewieOptions,
+  )? optionsBuilder;
 
   /// Add your own additional options on top of chewie options
   final List<OptionItem> Function(BuildContext context)? additionalOptions;
