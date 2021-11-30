@@ -17,8 +17,8 @@ class PlayerWithControls extends StatelessWidget {
       final size = MediaQuery.of(context).size;
       final width = size.width;
       final height = size.height;
-
-      return width > height ? width / height : height / width;
+      //todo this was orignal width > height ? width / height : height / width
+      return height / width;
     }
 
     Widget _buildControls(
