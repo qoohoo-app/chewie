@@ -441,8 +441,15 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
 
     _updateState();
 
-    if (controller.value.isPlaying || chewieController.autoPlay) {
+    if (controller.value.isPlaying) {
       _startHideTimer();
+    }
+    if (chewieController.autoPlay) {
+      _hideTimer?.cancel();
+
+      setState(() {
+        notifier.hideStuff = true;
+      });
     }
 
     if (chewieController.showControlsOnInitialize) {
