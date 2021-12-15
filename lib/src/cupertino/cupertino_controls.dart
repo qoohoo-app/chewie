@@ -279,19 +279,15 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
     final bool isFinished = _latestValue.position >= _latestValue.duration;
 
     return GestureDetector(
-      onTap: () {
-        _hideTimer?.cancel();
+      onTap: _latestValue.isPlaying
+          ? _cancelAndRestartTimer
+          : () {
+              _hideTimer?.cancel();
 
-        if (_latestValue.isPlaying) {
-          setState(() {
-            notifier.hideStuff = true;
-          });
-        } else {
-          setState(() {
-            notifier.hideStuff = false;
-          });
-        }
-      },
+              setState(() {
+                notifier.hideStuff = false;
+              });
+            },
       child: CenterPlayButton(
         backgroundColor: widget.backgroundColor,
         iconColor: widget.iconColor,
@@ -659,7 +655,8 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
 
         chewieController.onPause?.call();
       } else {
-        _cancelAndRestartTimer();
+        // _cancelAndRestartTimer();
+        _hideTimer?.cancel();
 
         if (!controller.value.isInitialized) {
           controller.initialize().then((_) {
@@ -671,6 +668,8 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
           }
           controller.play();
         }
+
+        notifier.hideStuff = true;
 
         chewieController.onPlay?.call();
       }
