@@ -563,8 +563,13 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
 
     _updateState();
 
-    if (controller.value.isPlaying || chewieController.autoPlay) {
+    if (controller.value.isPlaying) {
       _startHideTimer();
+    }
+    if(chewieController.autoPlay){
+      setState(() {
+        notifier.hideStuff = true;
+      });
     }
 
     if (chewieController.showControlsOnInitialize) {
