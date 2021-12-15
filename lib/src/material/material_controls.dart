@@ -478,7 +478,8 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
 
         chewieController.onPause?.call();
       } else {
-        _cancelAndRestartTimer();
+        // _cancelAndRestartTimer();
+        _hideTimer?.cancel();
 
         if (!controller.value.isInitialized) {
           controller.initialize().then((_) {
@@ -492,6 +493,8 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
           }
           controller.play();
         }
+
+        notifier.hideStuff = true;
 
         chewieController.onPlay?.call();
       }
