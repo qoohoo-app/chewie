@@ -462,9 +462,9 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
     });
   }
 
-  void _cancelAndRestartTimer() {
+  void _cancelAndRestartTimer({Duration? duration}) {
     _hideTimer?.cancel();
-    _startHideTimer();
+    _startHideTimer(duration: duration);
 
     setState(() {
       notifier.hideStuff = false;
@@ -515,7 +515,7 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
 
         chewieController.onPause?.call();
       } else {
-        _cancelAndRestartTimer();
+        _cancelAndRestartTimer(duration: Duration.zero);
 
         if (!controller.value.isInitialized) {
           controller.initialize().then((_) {
@@ -535,8 +535,8 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
     });
   }
 
-  void _startHideTimer() {
-    _hideTimer = Timer(const Duration(seconds: 3), () {
+  void _startHideTimer({Duration? duration}) {
+    _hideTimer = Timer(duration ?? const Duration(seconds: 3), () {
       setState(() {
         notifier.hideStuff = true;
       });

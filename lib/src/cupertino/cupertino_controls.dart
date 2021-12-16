@@ -605,13 +605,13 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
     );
   }
 
-  void _cancelAndRestartTimer() {
+  void _cancelAndRestartTimer({Duration? duration}) {
     _hideTimer?.cancel();
 
     setState(() {
       notifier.hideStuff = false;
 
-      _startHideTimer();
+      _startHideTimer(duration: duration);
     });
   }
 
@@ -710,7 +710,7 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
 
         chewieController.onPause?.call();
       } else {
-        _cancelAndRestartTimer();
+        _cancelAndRestartTimer(duration: Duration.zero);
 
         if (!controller.value.isInitialized) {
           controller.initialize().then((_) {
@@ -742,8 +742,8 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
     controller.seekTo(Duration(milliseconds: math.min(skip, end)));
   }
 
-  void _startHideTimer() {
-    _hideTimer = Timer(const Duration(seconds: 3), () {
+  void _startHideTimer({Duration? duration}) {
+    _hideTimer = Timer(duration ?? const Duration(seconds: 3), () {
       setState(() {
         notifier.hideStuff = true;
       });
