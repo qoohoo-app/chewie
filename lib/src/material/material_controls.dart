@@ -474,9 +474,9 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
     });
   }
 
-  void _cancelAndRestartTimer() {
+  void _cancelAndRestartTimer({Duration? duration}) {
     _hideTimer?.cancel();
-    _startHideTimer();
+    _startHideTimer(duration: duration);
 
     setState(() {
       notifier.hideStuff = false;
@@ -527,7 +527,7 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
 
         chewieController.onPause?.call();
       } else {
-        _cancelAndRestartTimer();
+        _cancelAndRestartTimer(duration: Duration.zero);
 
         if (!controller.value.isInitialized) {
           controller.initialize().then((_) {
