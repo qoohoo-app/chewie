@@ -376,7 +376,7 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
         }
       },
       child: CenterPlayButton(
-        backgroundColor: Colors.black54,
+        backgroundColor: Colors.black.withOpacity(0.4),
         iconColor: Colors.white,
         isFinished: isFinished,
         isPlaying: controller.value.isPlaying,
@@ -479,11 +479,11 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
     _updateState();
 
     if (controller.value.isPlaying || chewieController.autoPlay) {
-      _startHideTimer();
+      _startHideTimer(duration: const Duration(milliseconds: 500));
     }
 
     if (chewieController.showControlsOnInitialize) {
-      _initTimer = Timer(const Duration(milliseconds: 200), () {
+      _initTimer = Timer(Duration.zero, () {
         setState(() {
           notifier.hideStuff = false;
         });
@@ -515,7 +515,7 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
 
         chewieController.onPause?.call();
       } else {
-        _cancelAndRestartTimer(duration: Duration.zero);
+        _cancelAndRestartTimer(duration: const Duration(milliseconds: 400));
 
         if (!controller.value.isInitialized) {
           controller.initialize().then((_) {
