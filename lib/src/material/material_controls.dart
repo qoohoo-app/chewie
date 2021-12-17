@@ -339,7 +339,7 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
         }
       },
       child: CenterPlayButton(
-        backgroundColor: Colors.black54,
+        backgroundColor: Colors.black.withOpacity(0.4),
         iconColor: Colors.white,
         isFinished: isFinished,
         isPlaying: controller.value.isPlaying,
