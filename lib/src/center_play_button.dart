@@ -36,7 +36,7 @@ class CenterPlayButton extends StatelessWidget {
             padding: EdgeInsets.zero,
             child: Center(
               child: IconButton(
-                iconSize: 24.0,
+                iconSize: 32.0,
                 padding: EdgeInsets.zero,
                 icon: isFinished
                     ? Icon(Icons.replay, color: iconColor)
