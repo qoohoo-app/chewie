@@ -648,7 +648,7 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
 
         chewieController.onPause?.call();
       } else {
-        _cancelAndRestartTimer(duration: Duration.zero);
+        _cancelAndRestartTimer(duration: const Duration(milliseconds: 400));
 
         if (!controller.value.isInitialized) {
           controller.initialize().then((_) {
