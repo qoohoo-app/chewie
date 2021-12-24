@@ -382,6 +382,8 @@ class ChewieController extends ChangeNotifier {
   /// won't be shown.
   final bool showOptions;
 
+  final Color? circularProgressColor;
+
   /// If false, the subtitle button in
   /// won't be shown.
   final bool showSubtitleToggle;
