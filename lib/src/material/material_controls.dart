@@ -86,8 +86,10 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
           child: Stack(
             children: [
               if (_displayBufferingIndicator)
-                const Center(
-                  child: CircularProgressIndicator(),
+                Center(
+                  child: CircularProgressIndicator(
+                    color: _chewieController?.circularProgressColor,
+                  ),
                 )
               else
                 _buildHitArea(),

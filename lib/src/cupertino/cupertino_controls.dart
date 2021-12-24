@@ -93,8 +93,10 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
           child: Stack(
             children: [
               if (_displayBufferingIndicator)
-                const Center(
-                  child: CircularProgressIndicator(),
+                Center(
+                  child: CircularProgressIndicator(
+                    color: _chewieController?.circularProgressColor,
+                  ),
                 )
               else
                 _buildHitArea(),

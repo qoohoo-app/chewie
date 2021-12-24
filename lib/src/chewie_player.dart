@@ -287,6 +287,7 @@ class ChewieController extends ChangeNotifier {
     this.onPlay,
     this.onPause,
     this.onReplay,
+    this.circularProgressColor,
   }) : assert(
           playbackSpeeds.every((speed) => speed > 0),
           'The playbackSpeeds values must all be greater than 0',
@@ -395,6 +396,8 @@ class ChewieController extends ChangeNotifier {
   /// If false, the options button in MaterialUI and MaterialDesktopUI
   /// won't be shown.
   final bool showOptions;
+
+  final Color? circularProgressColor;
 
   /// If false, the subtitle button in
   /// won't be shown.
