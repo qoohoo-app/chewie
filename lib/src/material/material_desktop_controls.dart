@@ -261,8 +261,8 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
                     if (chewieController.showControls &&
                         chewieController.subtitle != null &&
                         chewieController.subtitle!.isNotEmpty)
-                        _buildSubtitleToggle(icon: Icons.subtitles),
-                      if (chewieController.showOptions) _buildOptionsButton(icon: Icons.settings),
+                      _buildSubtitleToggle(icon: Icons.subtitles),
+                    if (chewieController.showOptions) _buildOptionsButton(icon: Icons.settings),
                     if (chewieController.allowFullScreen) _buildExpandButton(),
                   ],
                 ),
@@ -315,8 +315,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
 
   Widget _buildHitArea() {
     final bool isFinished = _latestValue.position >= _latestValue.duration;
-    final bool showPlayButton =
-        widget.showPlayButton && !_dragging && !notifier.hideStuff;
+    final bool showPlayButton = widget.showPlayButton && !_dragging && !notifier.hideStuff;
 
     return GestureDetector(
       onTap: () {

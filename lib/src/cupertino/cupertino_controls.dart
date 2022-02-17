@@ -284,7 +284,8 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
                           if (chewieController.allowPlaybackSpeedChanging)
                             _buildSpeedButton(controller, iconColor, barHeight),
                           if (chewieController.additionalOptions != null &&
-                              chewieController.additionalOptions!(context).isNotEmpty)
+                              chewieController
+                                  .additionalOptions!(context).isNotEmpty)
                             _buildOptionsButton(iconColor, barHeight),
                         ],
                       ),
