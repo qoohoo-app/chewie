@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:chewie/src/chewie_progress_colors.dart';
+import 'package:chewie/src/models/option_item.dart';
 import 'package:chewie/src/models/options_translation.dart';
 import 'package:chewie/src/models/subtitle_model.dart';
 import 'package:chewie/src/notifiers/player_notifier.dart';
@@ -11,13 +12,11 @@ import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wakelock/wakelock.dart';
 
-import 'models/option_item.dart';
-
 typedef ChewieRoutePageBuilder = Widget Function(
   BuildContext context,
   Animation<double> animation,
   Animation<double> secondaryAnimation,
-  _ChewieControllerProvider controllerProvider,
+  ChewieControllerProvider controllerProvider,
 );
 
 /// A Video Player with Material and Cupertino skins.
@@ -86,7 +85,7 @@ class ChewieState extends State<Chewie> {
 
   @override
   Widget build(BuildContext context) {
-    return _ChewieControllerProvider(
+    return ChewieControllerProvider(
       controller: widget.controller,
       child: ChangeNotifierProvider<PlayerNotifier>.value(
         value: notifier,
@@ -98,7 +97,7 @@ class ChewieState extends State<Chewie> {
   Widget _buildFullScreenVideo(
     BuildContext context,
     Animation<double> animation,
-    _ChewieControllerProvider controllerProvider,
+    ChewieControllerProvider controllerProvider,
   ) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -114,7 +113,7 @@ class ChewieState extends State<Chewie> {
     BuildContext context,
     Animation<double> animation,
     Animation<double> secondaryAnimation,
-    _ChewieControllerProvider controllerProvider,
+    ChewieControllerProvider controllerProvider,
   ) {
     return AnimatedBuilder(
       animation: animation,
@@ -129,7 +128,7 @@ class ChewieState extends State<Chewie> {
     Animation<double> animation,
     Animation<double> secondaryAnimation,
   ) {
-    final controllerProvider = _ChewieControllerProvider(
+    final controllerProvider = ChewieControllerProvider(
       controller: widget.controller,
       child: ChangeNotifierProvider<PlayerNotifier>.value(
         value: notifier,
@@ -336,7 +335,7 @@ class ChewieController extends ChangeNotifier {
       BuildContext,
       Animation<double>,
       Animation<double>,
-      _ChewieControllerProvider,
+      ChewieControllerProvider,
     )?
         routePageBuilder,
   }) {
@@ -528,7 +527,7 @@ class ChewieController extends ChangeNotifier {
   final Duration? progressIndicatorDelay;
 
   static ChewieController of(BuildContext context) {
-    final chewieControllerProvider = context.dependOnInheritedWidgetOfExactType<_ChewieControllerProvider>()!;
+    final chewieControllerProvider = context.dependOnInheritedWidgetOfExactType<ChewieControllerProvider>()!;
 
     return chewieControllerProvider.controller;
   }
@@ -615,8 +614,8 @@ class ChewieController extends ChangeNotifier {
   }
 }
 
-class _ChewieControllerProvider extends InheritedWidget {
-  const _ChewieControllerProvider({
+class ChewieControllerProvider extends InheritedWidget {
+  const ChewieControllerProvider({
     Key? key,
     required this.controller,
     required Widget child,
@@ -625,5 +624,5 @@ class _ChewieControllerProvider extends InheritedWidget {
   final ChewieController controller;
 
   @override
-  bool updateShouldNotify(_ChewieControllerProvider old) => controller != old.controller;
+  bool updateShouldNotify(ChewieControllerProvider old) => controller != old.controller;
 }
