@@ -265,6 +265,8 @@ class ChewieController extends ChangeNotifier {
     this.optionsBuilder,
     this.additionalOptions,
     this.showControls = true,
+    this.zoomAndPan = false,
+    this.maxScale = 2.5,
     this.subtitle,
     this.subtitleBuilder,
     this.customControls,
@@ -311,6 +313,8 @@ class ChewieController extends ChangeNotifier {
     Future<void> Function(BuildContext, List<OptionItem>)? optionsBuilder,
     List<OptionItem> Function(BuildContext)? additionalOptions,
     bool? showControls,
+    bool? zoomAndPan,
+    double? maxScale,
     Subtitles? subtitle,
     Widget Function(BuildContext, dynamic)? subtitleBuilder,
     Widget? customControls,
@@ -454,6 +458,12 @@ class ChewieController extends ChangeNotifier {
 
   /// Whether or not to show the controls at all
   final bool showControls;
+
+  /// Whether or not to allow zooming and panning
+  final bool zoomAndPan;
+
+  /// Max scale when zooming
+  final double maxScale;
 
   /// Defines customised controls. Check [MaterialControls] or
   /// [CupertinoControls] for reference.
