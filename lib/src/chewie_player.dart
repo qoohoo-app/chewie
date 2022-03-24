@@ -12,8 +12,6 @@ import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wakelock/wakelock.dart';
 
-import 'material/models/option_item.dart';
-
 typedef ChewieRoutePageBuilder = Widget Function(
   BuildContext context,
   Animation<double> animation,
@@ -176,8 +174,10 @@ class ChewieState extends State<Chewie> {
 
     SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.manual,
-      overlays:widget.controller.systemOverlaysAfterFullScreen,
-    );SystemChrome.setPreferredOrientations(widget.controller.deviceOrientationsAfterFullScreen,
+      overlays: widget.controller.systemOverlaysAfterFullScreen,
+    );
+    SystemChrome.setPreferredOrientations(
+      widget.controller.deviceOrientationsAfterFullScreen,
     );
   }
 
@@ -199,7 +199,8 @@ class ChewieState extends State<Chewie> {
 
     if (widget.controller.deviceOrientationsOnEnterFullScreen != null) {
       /// Optional user preferred settings
-      SystemChrome.setPreferredOrientations(widget.controller.deviceOrientationsOnEnterFullScreen!,
+      SystemChrome.setPreferredOrientations(
+        widget.controller.deviceOrientationsOnEnterFullScreen!,
       );
     } else {
       final isLandscapeVideo = videoWidth > videoHeight;
@@ -242,6 +243,7 @@ class ChewieState extends State<Chewie> {
 /// `VideoPlayerController`.
 class ChewieController extends ChangeNotifier {
   ChewieController({
+    this.circularProgressColor,
     required this.videoPlayerController,
     this.optionsTranslation,
     this.aspectRatio,
@@ -282,7 +284,9 @@ class ChewieController extends ChangeNotifier {
     this.onPlay,
     this.onPause,
     this.onReplay,
-  }) : assert(playbackSpeeds.every((speed) => speed > 0), 'The playbackSpeeds values must all be greater than 0',
+  }) : assert(
+          playbackSpeeds.every((speed) => speed > 0),
+          'The playbackSpeeds values must all be greater than 0',
         ) {
     _initialize();
   }
