@@ -285,6 +285,7 @@ class ChewieController extends ChangeNotifier {
     this.deviceOrientationsAfterFullScreen = DeviceOrientation.values,
     this.routePageBuilder,
     this.hideControlsTimer = defaultHideControlsTimer,
+    this.progressIndicatorDelayMS,
     this.onPlay,
     this.onPause,
     this.onReplay,
@@ -332,6 +333,7 @@ class ChewieController extends ChangeNotifier {
     List<DeviceOrientation>? deviceOrientationsOnEnterFullScreen,
     List<SystemUiOverlay>? systemOverlaysAfterFullScreen,
     List<DeviceOrientation>? deviceOrientationsAfterFullScreen,
+    int? bufferingProgressIndicatorDisplayDelayMS,
     Duration? progressIndicatorDelay,
     Widget Function(BuildContext, Animation<double>, Animation<double>, _ChewieControllerProvider)? routePageBuilder,
     VoidCallback? onPlay,
@@ -346,48 +348,48 @@ class ChewieController extends ChangeNotifier {
         routePageBuilder,
   }) {
     return ChewieController(
-      videoPlayerController: videoPlayerController ?? this.videoPlayerController,
-      optionsTranslation: optionsTranslation ?? this.optionsTranslation,
-      aspectRatio: aspectRatio ?? this.aspectRatio,
-      autoInitialize: autoInitialize ?? this.autoInitialize,
-      autoPlay: autoPlay ?? this.autoPlay,
-      startAt: startAt ?? this.startAt,
-      looping: looping ?? this.looping,
-      fullScreenByDefault: fullScreenByDefault ?? this.fullScreenByDefault,
-      cupertinoProgressColors: cupertinoProgressColors ?? this.cupertinoProgressColors,
-      materialProgressColors: materialProgressColors ?? this.materialProgressColors,
-      placeholder: placeholder ?? this.placeholder,
-      overlay: overlay ?? this.overlay,
-      showControlsOnInitialize: showControlsOnInitialize ?? this.showControlsOnInitialize,
-      showOptions: showOptions ?? this.showOptions,
-      optionsBuilder: optionsBuilder ?? this.optionsBuilder,
-      additionalOptions: additionalOptions ?? this.additionalOptions,
-      showControls: showControls ?? this.showControls,
-      subtitle: subtitle ?? this.subtitle,
-      subtitleBuilder: subtitleBuilder ?? this.subtitleBuilder,
-      customControls: customControls ?? this.customControls,
-      errorBuilder: errorBuilder ?? this.errorBuilder,
-      allowedScreenSleep: allowedScreenSleep ?? this.allowedScreenSleep,
-      isLive: isLive ?? this.isLive,
-      allowFullScreen: allowFullScreen ?? this.allowFullScreen,
-      allowMuting: allowMuting ?? this.allowMuting,
-      allowPlaybackSpeedChanging: allowPlaybackSpeedChanging ?? this.allowPlaybackSpeedChanging,
-      useRootNavigator: useRootNavigator ?? this.useRootNavigator,
-      playbackSpeeds: playbackSpeeds ?? this.playbackSpeeds,
-      systemOverlaysOnEnterFullScreen: systemOverlaysOnEnterFullScreen ?? this.systemOverlaysOnEnterFullScreen,
-      deviceOrientationsOnEnterFullScreen:
-          deviceOrientationsOnEnterFullScreen ?? this.deviceOrientationsOnEnterFullScreen,
-      systemOverlaysAfterFullScreen: systemOverlaysAfterFullScreen ?? this.systemOverlaysAfterFullScreen,
-      deviceOrientationsAfterFullScreen: deviceOrientationsAfterFullScreen ?? this.deviceOrientationsAfterFullScreen,
-      routePageBuilder: routePageBuilder ?? this.routePageBuilder,
-      hideControlsTimer: hideControlsTimer ?? this.hideControlsTimer,
-      showSubtitleToggle: showSubtitleToggle ?? this.showSubtitleToggle,
-      showCupertinoSkipOptions: showCupertinoSkipOptions ?? this.showCupertinoSkipOptions,
-      onPlay: onPlay ?? this.onPlay,
-      onPause: onPause ?? this.onPause,
-      onReplay: onReplay ?? this.onReplay,
-      progressIndicatorDelay: progressIndicatorDelay ?? this.progressIndicatorDelay,
-    );
+        videoPlayerController: videoPlayerController ?? this.videoPlayerController,
+        optionsTranslation: optionsTranslation ?? this.optionsTranslation,
+        aspectRatio: aspectRatio ?? this.aspectRatio,
+        autoInitialize: autoInitialize ?? this.autoInitialize,
+        autoPlay: autoPlay ?? this.autoPlay,
+        startAt: startAt ?? this.startAt,
+        looping: looping ?? this.looping,
+        fullScreenByDefault: fullScreenByDefault ?? this.fullScreenByDefault,
+        cupertinoProgressColors: cupertinoProgressColors ?? this.cupertinoProgressColors,
+        materialProgressColors: materialProgressColors ?? this.materialProgressColors,
+        placeholder: placeholder ?? this.placeholder,
+        overlay: overlay ?? this.overlay,
+        showControlsOnInitialize: showControlsOnInitialize ?? this.showControlsOnInitialize,
+        showOptions: showOptions ?? this.showOptions,
+        optionsBuilder: optionsBuilder ?? this.optionsBuilder,
+        additionalOptions: additionalOptions ?? this.additionalOptions,
+        showControls: showControls ?? this.showControls,
+        subtitle: subtitle ?? this.subtitle,
+        subtitleBuilder: subtitleBuilder ?? this.subtitleBuilder,
+        customControls: customControls ?? this.customControls,
+        errorBuilder: errorBuilder ?? this.errorBuilder,
+        allowedScreenSleep: allowedScreenSleep ?? this.allowedScreenSleep,
+        isLive: isLive ?? this.isLive,
+        allowFullScreen: allowFullScreen ?? this.allowFullScreen,
+        allowMuting: allowMuting ?? this.allowMuting,
+        allowPlaybackSpeedChanging: allowPlaybackSpeedChanging ?? this.allowPlaybackSpeedChanging,
+        useRootNavigator: useRootNavigator ?? this.useRootNavigator,
+        playbackSpeeds: playbackSpeeds ?? this.playbackSpeeds,
+        systemOverlaysOnEnterFullScreen: systemOverlaysOnEnterFullScreen ?? this.systemOverlaysOnEnterFullScreen,
+        deviceOrientationsOnEnterFullScreen:
+            deviceOrientationsOnEnterFullScreen ?? this.deviceOrientationsOnEnterFullScreen,
+        systemOverlaysAfterFullScreen: systemOverlaysAfterFullScreen ?? this.systemOverlaysAfterFullScreen,
+        deviceOrientationsAfterFullScreen: deviceOrientationsAfterFullScreen ?? this.deviceOrientationsAfterFullScreen,
+        routePageBuilder: routePageBuilder ?? this.routePageBuilder,
+        hideControlsTimer: hideControlsTimer ?? this.hideControlsTimer,
+        showSubtitleToggle: showSubtitleToggle ?? this.showSubtitleToggle,
+        showCupertinoSkipOptions: showCupertinoSkipOptions ?? this.showCupertinoSkipOptions,
+        onPlay: onPlay ?? this.onPlay,
+        onPause: onPause ?? this.onPause,
+        onReplay: onReplay ?? this.onReplay,
+        progressIndicatorDelay: progressIndicatorDelay ?? this.progressIndicatorDelay,
+        progressIndicatorDelayMS: bufferingProgressIndicatorDisplayDelayMS ?? this.progressIndicatorDelayMS);
   }
 
   static const defaultHideControlsTimer = Duration(seconds: 3);
@@ -541,8 +543,8 @@ class ChewieController extends ChangeNotifier {
   /// Defines a custom RoutePageBuilder for the fullscreen
   final ChewieRoutePageBuilder? routePageBuilder;
 
-  /// Defines a delay in milliseconds between entering buffering state and displaying the loading spinner. Set null (default) to disable it.
-  final Duration? progressIndicatorDelay;
+  /// [Android] Defines a delay in milliseconds between entering buffering state and displaying the loading spinner. Set null (default) to disable it.
+  final int? progressIndicatorDelayMS;
 
   static ChewieController of(BuildContext context) {
     final chewieControllerProvider = context.dependOnInheritedWidgetOfExactType<ChewieControllerProvider>()!;
