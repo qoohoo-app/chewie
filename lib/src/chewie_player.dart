@@ -333,7 +333,7 @@ class ChewieController extends ChangeNotifier {
     List<DeviceOrientation>? deviceOrientationsOnEnterFullScreen,
     List<SystemUiOverlay>? systemOverlaysAfterFullScreen,
     List<DeviceOrientation>? deviceOrientationsAfterFullScreen,
-    int? bufferingProgressIndicatorDisplayDelayMS,
+    int? progressIndicatorDelayMS,
     Duration? progressIndicatorDelay,
     Widget Function(BuildContext, Animation<double>, Animation<double>, _ChewieControllerProvider)? routePageBuilder,
     VoidCallback? onPlay,
@@ -388,7 +388,6 @@ class ChewieController extends ChangeNotifier {
         onPlay: onPlay ?? this.onPlay,
         onPause: onPause ?? this.onPause,
         onReplay: onReplay ?? this.onReplay,
-        progressIndicatorDelay: progressIndicatorDelay ?? this.progressIndicatorDelay,
         progressIndicatorDelayMS: bufferingProgressIndicatorDisplayDelayMS ?? this.progressIndicatorDelayMS);
   }
 
