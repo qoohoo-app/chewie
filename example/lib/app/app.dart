@@ -109,7 +109,7 @@ class _ChewieDemoState extends State<ChewieDemo> {
       videoPlayerController: _videoPlayerController1,
       autoPlay: true,
       looping: true,
-      progressIndicatorDelayMS: bufferDelay,
+      progressIndicatorDelayMs: bufferDelay,
 
       additionalOptions: (context) {
         return <OptionItem>[
@@ -307,7 +307,7 @@ class _ChewieDemoState extends State<ChewieDemo> {
               ListTile(
                 title: const Text("Delay"),
                 subtitle: DelaySlider(
-                  delay: _chewieController?.progressIndicatorDelayMS,
+                  delay: _chewieController?.progressIndicatorDelayMs,
                   onSave: (delay) async {
                     if (delay != null) {
                       if (delay == 0) {
