@@ -128,6 +128,8 @@ class _ChewieDemoState extends State<ChewieDemo> {
               ),
       ),
 
+      hideControlsTimer: const Duration(seconds: 1),
+
       // Try playing around with some of these other options:
 
       // showControls: false,

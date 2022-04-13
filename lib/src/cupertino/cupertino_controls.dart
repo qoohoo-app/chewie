@@ -161,8 +161,7 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
   ) {
     final options = <OptionItem>[];
 
-    if (chewieController.additionalOptions != null &&
-        chewieController.additionalOptions!(context).isNotEmpty) {
+    if (chewieController.additionalOptions != null && chewieController.additionalOptions!(context).isNotEmpty) {
       options.addAll(chewieController.additionalOptions!(context));
     }
 
@@ -179,8 +178,7 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
             useRootNavigator: chewieController.useRootNavigator,
             builder: (context) => CupertinoOptionsDialog(
               options: options,
-              cancelButtonText:
-                  chewieController.optionsTranslation?.cancelButtonText,
+              cancelButtonText: chewieController.optionsTranslation?.cancelButtonText,
             ),
           );
           if (_latestValue.isPlaying) {
@@ -284,8 +282,7 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
                           if (chewieController.allowPlaybackSpeedChanging)
                             _buildSpeedButton(controller, iconColor, barHeight),
                           if (chewieController.additionalOptions != null &&
-                              chewieController
-                                  .additionalOptions!(context).isNotEmpty)
+                              chewieController.additionalOptions!(context).isNotEmpty)
                             _buildOptionsButton(iconColor, barHeight),
                         ],
                       ),
@@ -347,8 +344,7 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
 
   Widget _buildHitArea() {
     final bool isFinished = _latestValue.position >= _latestValue.duration;
-    final bool showPlayButton =
-        widget.showPlayButton && !_latestValue.isPlaying && !_dragging;
+    final bool showPlayButton = widget.showPlayButton && !_latestValue.isPlaying && !_dragging;
 
     return GestureDetector(
       onTap: _latestValue.isPlaying
@@ -763,8 +759,10 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
     controller.seekTo(Duration(milliseconds: math.min(skip, end)));
   }
 
-  void _startHideTimer({Duration? duration}) {
-    _hideTimer = Timer(duration ?? const Duration(seconds: 3), () {
+  void _startHideTimer() {
+    final hideControlsTimer =
+        chewieController.hideControlsTimer.isNegative ? const Duration(seconds: 3) : chewieController.hideControlsTimer;
+    _hideTimer = Timer(hideControlsTimer, () {
       setState(() {
         notifier.hideStuff = true;
       });
