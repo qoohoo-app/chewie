@@ -507,7 +507,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
 
   void _startHideTimer() {
     final hideControlsTimer = chewieController.hideControlsTimer.isNegative
-        ? ChewieController.defaultTimer
+        ? ChewieController.defaultHideControlsTimer
         : chewieController.hideControlsTimer;
     _hideTimer = Timer(hideControlsTimer, () {
       setState(() {
