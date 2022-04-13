@@ -284,7 +284,7 @@ class ChewieController extends ChangeNotifier {
     this.systemOverlaysAfterFullScreen = SystemUiOverlay.values,
     this.deviceOrientationsAfterFullScreen = DeviceOrientation.values,
     this.routePageBuilder,
-    this.hideControlsTimer = const Duration(seconds: 3),
+    this.hideControlsTimer = defaultTimer,
     this.onPlay,
     this.onPause,
     this.onReplay,
@@ -389,6 +389,8 @@ class ChewieController extends ChangeNotifier {
       progressIndicatorDelay: progressIndicatorDelay ?? this.progressIndicatorDelay,
     );
   }
+
+  static const defaultTimer = Duration(seconds: 3);
 
   /// If false, the options button in MaterialUI and MaterialDesktopUI
   /// won't be shown.

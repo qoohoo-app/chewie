@@ -535,8 +535,9 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
   }
 
   void _startHideTimer() {
-    final hideControlsTimer =
-        chewieController.hideControlsTimer.isNegative ? const Duration(seconds: 3) : chewieController.hideControlsTimer;
+    final hideControlsTimer = chewieController.hideControlsTimer.isNegative
+        ? ChewieController.defaultTimer
+        : chewieController.hideControlsTimer;
     _hideTimer = Timer(hideControlsTimer, () {
       setState(() {
         notifier.hideStuff = true;
