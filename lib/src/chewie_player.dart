@@ -286,7 +286,6 @@ class ChewieController extends ChangeNotifier {
     this.routePageBuilder,
     this.progressIndicatorDelay,
     this.hideControlsTimer = defaultHideControlsTimer,
-    this.progressIndicatorDelayMs,
     this.onPlay,
     this.onPause,
     this.onReplay,
