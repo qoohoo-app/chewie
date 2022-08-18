@@ -252,6 +252,7 @@ class ChewieController extends ChangeNotifier {
     this.onPause,
     this.onReplay,
     this.circularProgressColor,
+    this.progressIndicatorDelay,
   }) : assert(playbackSpeeds.every((speed) => speed > 0), 'The playbackSpeeds values must all be greater than 0') {
     _initialize();
   }
@@ -290,6 +291,7 @@ class ChewieController extends ChangeNotifier {
     List<DeviceOrientation>? deviceOrientationsOnEnterFullScreen,
     List<SystemUiOverlay>? systemOverlaysAfterFullScreen,
     List<DeviceOrientation>? deviceOrientationsAfterFullScreen,
+    Duration? progressIndicatorDelay,
     Widget Function(BuildContext, Animation<double>, Animation<double>, _ChewieControllerProvider)? routePageBuilder,
     VoidCallback? onPlay,
     VoidCallback? onPause,
@@ -334,6 +336,7 @@ class ChewieController extends ChangeNotifier {
       onPlay: onPlay ?? this.onPlay,
       onPause: onPause ?? this.onPause,
       onReplay: onReplay ?? this.onReplay,
+      progressIndicatorDelay: progressIndicatorDelay ?? this.progressIndicatorDelay,
     );
   }
 
@@ -470,6 +473,9 @@ class ChewieController extends ChangeNotifier {
 
   /// Defines a custom RoutePageBuilder for the fullscreen
   final ChewieRoutePageBuilder? routePageBuilder;
+
+  /// Defines a delay in milliseconds between entering buffering state and displaying the loading spinner. Set null (default) to disable it.
+  final Duration? progressIndicatorDelay;
 
   static ChewieController of(BuildContext context) {
     final chewieControllerProvider = context.dependOnInheritedWidgetOfExactType<_ChewieControllerProvider>()!;
