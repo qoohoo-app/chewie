@@ -622,13 +622,13 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
     );
   }
 
-  void _cancelAndRestartTimer({Duration? duration}) {
+  void _cancelAndRestartTimer() {
     _hideTimer?.cancel();
 
     setState(() {
       notifier.hideStuff = false;
 
-      _startHideTimer(duration: duration);
+      _startHideTimer();
     });
   }
 
@@ -639,7 +639,7 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
     _updateState();
 
     if (controller.value.isPlaying || chewieController.autoPlay) {
-      _startHideTimer(duration: const Duration(milliseconds: 500));
+      _startHideTimer();
     }
 
     if (chewieController.showControlsOnInitialize) {
@@ -727,7 +727,7 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
 
         chewieController.onPause?.call();
       } else {
-        _cancelAndRestartTimer(duration: const Duration(milliseconds: 400));
+        _cancelAndRestartTimer();
 
         if (!controller.value.isInitialized) {
           controller.initialize().then((_) {

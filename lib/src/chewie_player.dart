@@ -154,7 +154,7 @@ class ChewieState extends State<Chewie> {
 
   Future<dynamic> _pushFullScreenWidget(BuildContext context) async {
     final TransitionRoute<void> route = PageRouteBuilder<void>(
-      settings: RouteSettings(name: 'FullScreenVideo'),
+      settings: const RouteSettings(name: 'FullScreenVideo'),
       pageBuilder: _fullScreenRoutePageBuilder,
     );
 
@@ -291,7 +291,6 @@ class ChewieController extends ChangeNotifier {
     this.onPause,
     this.onReplay,
     this.circularProgressColor,
-    this.progressIndicatorDelay,
   }) : assert(playbackSpeeds.every((speed) => speed > 0), 'The playbackSpeeds values must all be greater than 0') {
     _initialize();
   }
@@ -336,8 +335,6 @@ class ChewieController extends ChangeNotifier {
     List<SystemUiOverlay>? systemOverlaysAfterFullScreen,
     List<DeviceOrientation>? deviceOrientationsAfterFullScreen,
     Duration? progressIndicatorDelay,
-    Duration? progressIndicatorDelay,
-    Widget Function(BuildContext, Animation<double>, Animation<double>, _ChewieControllerProvider)? routePageBuilder,
     VoidCallback? onPlay,
     VoidCallback? onPause,
     VoidCallback? onReplay,
@@ -394,7 +391,7 @@ class ChewieController extends ChangeNotifier {
     );
   }
 
-  static const defaultHideControlsTimer = Duration(seconds: 3);
+  static const defaultHideControlsTimer = Duration(milliseconds: 500);
 
   /// If false, the options button in MaterialUI and MaterialDesktopUI
   /// won't be shown.
