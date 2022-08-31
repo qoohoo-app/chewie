@@ -143,11 +143,11 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
 
   @override
   void didChangeDependencies() {
-    final _oldController = _chewieController;
+    final oldController = _chewieController;
     _chewieController = ChewieController.of(context);
     controller = chewieController.videoPlayerController;
 
-    if (_oldController != chewieController) {
+    if (oldController != chewieController) {
       _dispose();
       _initialize();
     }
@@ -759,11 +759,11 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
     controller.seekTo(Duration(milliseconds: math.min(skip, end)));
   }
 
-  void _startHideTimer() {
+  void _startHideTimer({Duration? duration}) {
     final hideControlsTimer = chewieController.hideControlsTimer.isNegative
         ? ChewieController.defaultHideControlsTimer
         : chewieController.hideControlsTimer;
-    _hideTimer = Timer(hideControlsTimer, () {
+    _hideTimer = Timer(duration ?? hideControlsTimer, () {
       setState(() {
         notifier.hideStuff = true;
       });

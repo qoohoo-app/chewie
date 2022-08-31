@@ -24,9 +24,7 @@ class PlayerWithControls extends StatelessWidget {
       BuildContext context,
       ChewieController chewieController,
     ) {
-      return chewieController.showControls
-          ? chewieController.customControls ?? const AdaptiveControls()
-          : Container();
+      return chewieController.showControls ? chewieController.customControls ?? const AdaptiveControls() : Container();
     }
 
     Widget _buildPlayerWithControls(
@@ -35,8 +33,7 @@ class PlayerWithControls extends StatelessWidget {
     ) {
       return Stack(
         children: <Widget>[
-          if (chewieController.placeholder != null)
-            chewieController.placeholder!,
+          if (chewieController.placeholder != null) chewieController.placeholder!,
           InteractiveViewer(
             transformationController: chewieController.transformationController,
             maxScale: chewieController.maxScale,
@@ -44,8 +41,7 @@ class PlayerWithControls extends StatelessWidget {
             scaleEnabled: chewieController.zoomAndPan,
             child: Center(
               child: AspectRatio(
-                aspectRatio: chewieController.aspectRatio ??
-                    chewieController.videoPlayerController.value.aspectRatio,
+                aspectRatio: chewieController.aspectRatio ?? chewieController.videoPlayerController.value.aspectRatio,
                 child: VideoPlayer(chewieController.videoPlayerController),
               ),
             ),
@@ -65,7 +61,7 @@ class PlayerWithControls extends StatelessWidget {
                   duration: const Duration(
                     milliseconds: 250,
                   ),
-                  child: Container(
+                  child: DecoratedBox(
                     decoration: const BoxDecoration(color: Colors.black54),
                     child: Container(),
                   ),

@@ -5,8 +5,6 @@ import 'package:chewie/src/chewie_player.dart';
 import 'package:chewie/src/chewie_progress_colors.dart';
 import 'package:chewie/src/helpers/utils.dart';
 import 'package:chewie/src/material/material_progress_bar.dart';
-import 'package:chewie/src/helpers/utils.dart';
-import 'package:chewie/src/material/models/option_item.dart';
 import 'package:chewie/src/material/widgets/options_dialog.dart';
 import 'package:chewie/src/material/widgets/playback_speed_dialog.dart';
 import 'package:chewie/src/models/option_item.dart';
@@ -130,11 +128,11 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
 
   @override
   void didChangeDependencies() {
-    final _oldController = _chewieController;
+    final oldController = _chewieController;
     _chewieController = ChewieController.of(context);
     controller = chewieController.videoPlayerController;
 
-    if (_oldController != chewieController) {
+    if (oldController != chewieController) {
       _dispose();
       _initialize();
     }
@@ -549,11 +547,11 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
     });
   }
 
-  void _startHideTimer() {
+  void _startHideTimer({Duration? duration}) {
     final hideControlsTimer = chewieController.hideControlsTimer.isNegative
         ? ChewieController.defaultHideControlsTimer
         : chewieController.hideControlsTimer;
-    _hideTimer = Timer(hideControlsTimer, () {
+    _hideTimer = Timer(duration ?? hideControlsTimer, () {
       setState(() {
         notifier.hideStuff = true;
       });
