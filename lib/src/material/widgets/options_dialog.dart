@@ -28,28 +28,46 @@ class _OptionsDialogState extends State<OptionsDialog> {
             itemCount: widget.options.length,
             itemBuilder: (context, i) {
               return ListTile(
-                onTap: widget.options[i].onTap != null
-                    ? widget.options[i].onTap!
-                    : null,
-                leading: Icon(widget.options[i].iconData),
-                title: Text(widget.options[i].title),
-                subtitle: widget.options[i].subtitle != null
-                    ? Text(widget.options[i].subtitle!)
-                    : null,
+                onTap: widget.options[i].onTap != null ? widget.options[i].onTap! : null,
+                leading: Icon(
+                  widget.options[i].iconData,
+                  color: Colors.white.withOpacity(0.8),
+                ),
+                title: Text(
+                  widget.options[i].title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    height: 22 / 16,
+                    color: Color(0xffFFFFFF),
+                  ),
+                ),
+                subtitle: widget.options[i].subtitle != null ? Text(widget.options[i].subtitle!) : null,
               );
             },
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Divider(
-              thickness: 1.0,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Container(
+              height: 1,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.white.withOpacity(0.05),
             ),
           ),
           ListTile(
             onTap: () => Navigator.pop(context),
-            leading: const Icon(Icons.close),
+            leading: Icon(
+              Icons.close,
+              color: Colors.white.withOpacity(0.8),
+            ),
             title: Text(
               widget.cancelButtonText ?? 'Cancel',
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                height: 22 / 16,
+                color: Color(0xffFFFFFF),
+              ),
             ),
           ),
         ],
