@@ -198,7 +198,9 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
           if (chewieController.optionsBuilder != null) {
             await chewieController.optionsBuilder!(context, options);
           } else {
-            await showModalBottomSheet<OptionItem>(
+            _hideTimer?.cancel();
+
+            final chosenSpeed = await showModalBottomSheet<double>(
               context: context,
               isScrollControlled: true,
               useRootNavigator: chewieController.useRootNavigator,
@@ -208,11 +210,19 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
                 ),
               ),
               backgroundColor: const Color(0xff1B1D20),
-              builder: (context) => OptionsDialog(
-                options: options,
-                cancelButtonText: chewieController.optionsTranslation?.cancelButtonText,
+              builder: (context) => PlaybackSpeedDialog(
+                speeds: chewieController.playbackSpeeds,
+                selected: _latestValue.playbackSpeed,
               ),
             );
+
+            if (chosenSpeed != null) {
+              controller.setPlaybackSpeed(chosenSpeed);
+            }
+
+            if (_latestValue.isPlaying) {
+              _startHideTimer();
+            }
           }
 
           if (_latestValue.isPlaying) {
@@ -220,7 +230,7 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
           }
         },
         icon: const Icon(
-          Icons.more_vert,
+          Icons.speed,
           color: Colors.white,
         ),
       ),
