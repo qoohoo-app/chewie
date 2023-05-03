@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:chewie/src/chewie_progress_colors.dart';
 import 'package:chewie/src/models/option_item.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wakelock/wakelock.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart' as YTE;
 
 typedef ChewieRoutePageBuilder = Widget Function(
   BuildContext context,
@@ -18,6 +20,8 @@ typedef ChewieRoutePageBuilder = Widget Function(
   Animation<double> secondaryAnimation,
   ChewieControllerProvider controllerProvider,
 );
+
+typedef YTVideoQualitySelector = void Function(BuildContext context, YTE.MuxedStreamInfo streamInfo);
 
 /// A Video Player with Material and Cupertino skins.
 ///
@@ -291,6 +295,9 @@ class ChewieController extends ChangeNotifier {
     this.onPause,
     this.onReplay,
     this.circularProgressColor,
+    this.youTubeVideoQualities,
+    this.onYTVideoQualityChanged,
+    this.selectedYouTubeVideoQuality,
   }) : assert(playbackSpeeds.every((speed) => speed > 0), 'The playbackSpeeds values must all be greater than 0') {
     _initialize();
   }
@@ -345,6 +352,9 @@ class ChewieController extends ChangeNotifier {
       ChewieControllerProvider,
     )?
         routePageBuilder,
+    UnmodifiableListView<YTE.MuxedStreamInfo>? youTubeVideoQualities,
+    YTVideoQualitySelector? onYTVideoQualityChanged,
+    YTE.MuxedStreamInfo? selectedYouTubeVideoQuality,
   }) {
     return ChewieController(
       videoPlayerController: videoPlayerController ?? this.videoPlayerController,
@@ -388,6 +398,9 @@ class ChewieController extends ChangeNotifier {
       onPause: onPause ?? this.onPause,
       onReplay: onReplay ?? this.onReplay,
       progressIndicatorDelay: progressIndicatorDelay ?? this.progressIndicatorDelay,
+      youTubeVideoQualities: youTubeVideoQualities ?? this.youTubeVideoQualities,
+      onYTVideoQualityChanged: onYTVideoQualityChanged ?? this.onYTVideoQualityChanged,
+      selectedYouTubeVideoQuality: selectedYouTubeVideoQuality ?? this.selectedYouTubeVideoQuality,
     );
   }
 
@@ -547,6 +560,15 @@ class ChewieController extends ChangeNotifier {
 
   /// Defines a delay in milliseconds between entering buffering state and displaying the loading spinner. Set null (default) to disable it.
   final Duration? progressIndicatorDelay;
+
+  /// Defines the quality settings for youtube video muxed streams
+  final UnmodifiableListView<YTE.MuxedStreamInfo>? youTubeVideoQualities;
+
+  /// Defines the callback for when the youtube video quality is changed
+  final YTVideoQualitySelector? onYTVideoQualityChanged;
+
+  /// Defines the selected youtube video quality
+  final YTE.MuxedStreamInfo? selectedYouTubeVideoQuality;
 
   static ChewieController of(BuildContext context) {
     final chewieControllerProvider = context.dependOnInheritedWidgetOfExactType<ChewieControllerProvider>()!;

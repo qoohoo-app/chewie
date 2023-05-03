@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:io';
 
 import 'package:chewie/chewie.dart';
@@ -5,6 +6,7 @@ import 'package:chewie_example/app/theme.dart';
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:video_player/video_player.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart' as YTE;
 
 class ChewieDemo extends StatefulWidget {
   const ChewieDemo({
@@ -22,35 +24,48 @@ class ChewieDemo extends StatefulWidget {
 
 class _ChewieDemoState extends State<ChewieDemo> {
   TargetPlatform? _platform;
-  late VideoPlayerController _videoPlayerController1;
-  late VideoPlayerController _videoPlayerController2;
+  late VideoPlayerController _videoPlayerController3;
   ChewieController? _chewieController;
   int? bufferDelay;
+
+  UnmodifiableListView<YTE.MuxedStreamInfo>? youTubeVideoQualities;
+  YTE.MuxedStreamInfo? selectedYouTubeVideoQuality;
 
   @override
   void initState() {
     super.initState();
-    initializePlayer();
+    initializePlayer(null);
   }
 
   @override
   void dispose() {
-    _videoPlayerController1.dispose();
-    _videoPlayerController2.dispose();
+    _videoPlayerController3.dispose();
     _chewieController?.dispose();
     super.dispose();
   }
 
-  List<String> srcs = [
-    "https://assets.mixkit.co/videos/preview/mixkit-spinning-around-the-earth-29351-large.mp4",
-    "https://assets.mixkit.co/videos/preview/mixkit-daytime-city-traffic-aerial-view-56-large.mp4",
-    "https://assets.mixkit.co/videos/preview/mixkit-a-girl-blowing-a-bubble-gum-at-an-amusement-park-1226-large.mp4"
-  ];
+  Future<void> initializePlayer(YTE.MuxedStreamInfo? selectedQuality) async {
+    if (selectedQuality != null) {
+      setState(() {
+        selectedYouTubeVideoQuality = selectedQuality;
+      });
+      _videoPlayerController3 = VideoPlayerController.network(selectedYouTubeVideoQuality!.url.toString());
+    } else {
+      final extractor = YTE.YoutubeExplode();
+      const videoId = '2DKry0vJ58k';
+      final streamManifest = await extractor.videos.streamsClient.getManifest(videoId);
+      youTubeVideoQualities = streamManifest.muxed;
+      final streamInfoHQ = youTubeVideoQualities?.bestQuality;
+      setState(() {
+        selectedYouTubeVideoQuality = streamInfoHQ;
+      });
+      final primaryStreamUrl = selectedYouTubeVideoQuality?.url.toString();
+      if (primaryStreamUrl != null) {
+        _videoPlayerController3 = VideoPlayerController.network(primaryStreamUrl);
+      }
+    }
 
-  Future<void> initializePlayer() async {
-    _videoPlayerController1 = VideoPlayerController.network(srcs[currPlayIndex]);
-    _videoPlayerController2 = VideoPlayerController.network(srcs[currPlayIndex]);
-    await Future.wait([_videoPlayerController1.initialize(), _videoPlayerController2.initialize()]);
+    await _videoPlayerController3.initialize();
     _createChewieController();
     setState(() {});
   }
@@ -106,21 +121,26 @@ class _ChewieDemoState extends State<ChewieDemo> {
     ];
 
     _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController1,
+      videoPlayerController: _videoPlayerController3,
       autoPlay: true,
       looping: true,
-      progressIndicatorDelay:
-          bufferDelay != null ? Duration(milliseconds: bufferDelay!) : null,
-
-      additionalOptions: (context) {
-        return <OptionItem>[
-          OptionItem(
-            onTap: toggleVideo,
-            iconData: Icons.live_tv_sharp,
-            title: 'Toggle Video Src',
-          ),
-        ];
+      progressIndicatorDelay: bufferDelay != null ? Duration(milliseconds: bufferDelay!) : null,
+      youTubeVideoQualities: youTubeVideoQualities,
+      onYTVideoQualityChanged: (context, streamInfo) {
+        _videoPlayerController3.pause();
+        _videoPlayerController3.seekTo(Duration.zero);
+        initializePlayer(streamInfo);
       },
+      selectedYouTubeVideoQuality: selectedYouTubeVideoQuality,
+      // additionalOptions: (context) {
+      //   return <OptionItem>[
+      //     OptionItem(
+      //       onTap: toggleVideo,
+      //       iconData: Icons.live_tv_sharp,
+      //       title: 'Toggle Video Src',
+      //     ),
+      //   ];
+      // },
       subtitle: Subtitles(subtitles),
       subtitleBuilder: (context, dynamic subtitle) => Container(
         padding: const EdgeInsets.all(10.0),
@@ -154,14 +174,14 @@ class _ChewieDemoState extends State<ChewieDemo> {
 
   int currPlayIndex = 0;
 
-  Future<void> toggleVideo() async {
-    await _videoPlayerController1.pause();
-    currPlayIndex += 1;
-    if (currPlayIndex >= srcs.length) {
-      currPlayIndex = 0;
-    }
-    await initializePlayer();
-  }
+  // Future<void> toggleVideo() async {
+  //   await _videoPlayerController1.pause();
+  //   currPlayIndex += 1;
+  //   if (currPlayIndex >= srcs.length) {
+  //     currPlayIndex = 0;
+  //   }
+  //   await initializePlayer();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -200,61 +220,88 @@ class _ChewieDemoState extends State<ChewieDemo> {
             ),
             Row(
               children: <Widget>[
+                // Expanded(
+                //   child: TextButton(
+                //     onPressed: () {
+                //       setState(() {
+                //         _videoPlayerController1.pause();
+                //         _videoPlayerController1.seekTo(Duration.zero);
+                //         _createChewieController();
+                //       });
+                //     },
+                //     child: const Padding(
+                //       padding: EdgeInsets.symmetric(vertical: 16.0),
+                //       child: Text("Landscape Video"),
+                //     ),
+                //   ),
+                // ),
+                // Expanded(
+                //   child: TextButton(
+                //     onPressed: () {
+                //       setState(() {
+                //         _videoPlayerController2.pause();
+                //         _videoPlayerController2.seekTo(Duration.zero);
+                //         _chewieController = _chewieController!.copyWith(
+                //           videoPlayerController: _videoPlayerController2,
+                //           autoPlay: true,
+                //           looping: true,
+                //           youTubeVideoQualities: UnmodifiableListView([]),
+                //           /* subtitle: Subtitles([
+                //             Subtitle(
+                //               index: 0,
+                //               start: Duration.zero,
+                //               end: const Duration(seconds: 10),
+                //               text: 'Hello from subtitles',
+                //             ),
+                //             Subtitle(
+                //               index: 0,
+                //               start: const Duration(seconds: 10),
+                //               end: const Duration(seconds: 20),
+                //               text: 'Whats up? :)',
+                //             ),
+                //           ]),
+                //           subtitleBuilder: (context, subtitle) => Container(
+                //             padding: const EdgeInsets.all(10.0),
+                //             child: Text(
+                //               subtitle,
+                //               style: const TextStyle(color: Colors.white),
+                //             ),
+                //           ), */
+                //         );
+                //       });
+                //     },
+                //     child: const Padding(
+                //       padding: EdgeInsets.symmetric(vertical: 16.0),
+                //       child: Text("Portrait Video"),
+                //     ),
+                //   ),
+                // ),
                 Expanded(
                   child: TextButton(
                     onPressed: () {
                       setState(() {
-                        _videoPlayerController1.pause();
-                        _videoPlayerController1.seekTo(Duration.zero);
-                        _createChewieController();
-                      });
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16.0),
-                      child: Text("Landscape Video"),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _videoPlayerController2.pause();
-                        _videoPlayerController2.seekTo(Duration.zero);
+                        _videoPlayerController3.pause();
+                        _videoPlayerController3.seekTo(Duration.zero);
                         _chewieController = _chewieController!.copyWith(
-                          videoPlayerController: _videoPlayerController2,
+                          videoPlayerController: _videoPlayerController3,
                           autoPlay: true,
                           looping: true,
-                          /* subtitle: Subtitles([
-                            Subtitle(
-                              index: 0,
-                              start: Duration.zero,
-                              end: const Duration(seconds: 10),
-                              text: 'Hello from subtitles',
-                            ),
-                            Subtitle(
-                              index: 0,
-                              start: const Duration(seconds: 10),
-                              end: const Duration(seconds: 20),
-                              text: 'Whats up? :)',
-                            ),
-                          ]),
-                          subtitleBuilder: (context, subtitle) => Container(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Text(
-                              subtitle,
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          ), */
+                          youTubeVideoQualities: youTubeVideoQualities,
+                          onYTVideoQualityChanged: (context, streamInfo) {
+                            _videoPlayerController3.pause();
+                            _videoPlayerController3.seekTo(Duration.zero);
+                            initializePlayer(streamInfo);
+                          },
+                          selectedYouTubeVideoQuality: selectedYouTubeVideoQuality,
                         );
                       });
                     },
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 16.0),
-                      child: Text("Portrait Video"),
+                      child: Text("YouTube Video"),
                     ),
                   ),
-                )
+                ),
               ],
             ),
             Row(
@@ -308,12 +355,11 @@ class _ChewieDemoState extends State<ChewieDemo> {
               ListTile(
                 title: const Text("Delay"),
                 subtitle: DelaySlider(
-                  delay:
-                      _chewieController?.progressIndicatorDelay?.inMilliseconds,
+                  delay: _chewieController?.progressIndicatorDelay?.inMilliseconds,
                   onSave: (delay) async {
                     if (delay != null) {
                       bufferDelay = delay == 0 ? null : delay;
-                      await initializePlayer();
+                      await initializePlayer(null);
                     }
                   },
                 ),
@@ -326,8 +372,7 @@ class _ChewieDemoState extends State<ChewieDemo> {
 }
 
 class DelaySlider extends StatefulWidget {
-  const DelaySlider({Key? key, required this.delay, required this.onSave})
-      : super(key: key);
+  const DelaySlider({Key? key, required this.delay, required this.onSave}) : super(key: key);
 
   final int? delay;
   final void Function(int?) onSave;

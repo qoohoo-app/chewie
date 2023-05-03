@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
@@ -16,6 +17,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart' as YTE;
 
 class CupertinoControls extends StatefulWidget {
   const CupertinoControls({
@@ -48,6 +50,8 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
   bool _subtitleOn = false;
   Timer? _bufferingDisplayTimer;
   bool _displayBufferingIndicator = false;
+
+  late YTE.MuxedStreamInfo? selectedQuality;
 
   late VideoPlayerController controller;
 
@@ -146,6 +150,8 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
     final _oldController = _chewieController;
     _chewieController = ChewieController.of(context);
     controller = chewieController.videoPlayerController;
+
+    selectedQuality = chewieController.selectedYouTubeVideoQuality;
 
     if (_oldController != chewieController) {
       _dispose();
@@ -279,6 +285,10 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
                           _buildProgressBar(),
                           _buildRemaining(iconColor),
                           if (chewieController.showSubtitleToggle) _buildSubtitleToggle(iconColor, barHeight),
+                          if (chewieController.youTubeVideoQualities != null &&
+                              chewieController.youTubeVideoQualities!.isNotEmpty &&
+                              selectedQuality != null)
+                            _buildYTQualityButton(controller, iconColor, barHeight, selectedQuality!),
                           if (chewieController.allowPlaybackSpeedChanging)
                             _buildSpeedButton(controller, iconColor, barHeight),
                           if (chewieController.additionalOptions != null &&
@@ -586,6 +596,53 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
     );
   }
 
+  GestureDetector _buildYTQualityButton(
+    VideoPlayerController controller,
+    Color iconColor,
+    double barHeight,
+    YTE.MuxedStreamInfo selectedQuality,
+  ) {
+    return GestureDetector(
+      onTap: () async {
+        _hideTimer?.cancel();
+
+        final chosenQuality = await showCupertinoModalPopup<YTE.MuxedStreamInfo>(
+          context: context,
+          semanticsDismissible: true,
+          useRootNavigator: chewieController.useRootNavigator,
+          builder: (context) => _YTPlaybackQualityDialog(
+            qualities: chewieController.youTubeVideoQualities ?? UnmodifiableListView([]),
+            selected: selectedQuality,
+          ),
+        );
+
+        if (chosenQuality != null) {
+          updateYTVideoQuality(chosenQuality);
+        }
+
+        if (_latestValue.isPlaying) {
+          _startHideTimer();
+        }
+      },
+      child: Container(
+        height: barHeight,
+        color: Colors.transparent,
+        padding: const EdgeInsets.only(
+          left: 6.0,
+          right: 8.0,
+        ),
+        margin: const EdgeInsets.only(
+          right: 8.0,
+        ),
+        child: Icon(
+          selectedQuality.videoQuality == YTE.VideoQuality.high720 ? Icons.high_quality : Icons.high_quality_outlined,
+          color: iconColor,
+          size: 18.0,
+        ),
+      ),
+    );
+  }
+
   Widget _buildTopBar(
     Color backgroundColor,
     Color iconColor,
@@ -630,6 +687,14 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
 
       _startHideTimer();
     });
+  }
+
+  Future<void> updateYTVideoQuality(YTE.MuxedStreamInfo _selectedQuality) async {
+    setState(() {
+      selectedQuality = _selectedQuality;
+    });
+
+    chewieController.onYTVideoQualityChanged?.call(context, _selectedQuality);
   }
 
   Future<void> _initialize() async {
@@ -831,6 +896,43 @@ class _PlaybackSpeedDialog extends StatelessWidget {
                 children: [
                   if (e == _selected) Icon(Icons.check, size: 20.0, color: selectedColor),
                   Text(e.toString()),
+                ],
+              ),
+            ),
+          )
+          .toList(),
+    );
+  }
+}
+
+class _YTPlaybackQualityDialog extends StatelessWidget {
+  const _YTPlaybackQualityDialog({
+    Key? key,
+    required UnmodifiableListView<YTE.MuxedStreamInfo> qualities,
+    required YTE.MuxedStreamInfo selected,
+  })  : _qualities = qualities,
+        _selected = selected,
+        super(key: key);
+
+  final UnmodifiableListView<YTE.MuxedStreamInfo> _qualities;
+  final YTE.MuxedStreamInfo _selected;
+
+  @override
+  Widget build(BuildContext context) {
+    final selectedColor = CupertinoTheme.of(context).primaryColor;
+
+    return CupertinoActionSheet(
+      actions: _qualities
+          .map(
+            (e) => CupertinoActionSheetAction(
+              onPressed: () {
+                Navigator.of(context).pop(e);
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (e == _selected) Icon(Icons.check, size: 20.0, color: selectedColor),
+                  Text(e.videoQuality.toShortString),
                 ],
               ),
             ),
