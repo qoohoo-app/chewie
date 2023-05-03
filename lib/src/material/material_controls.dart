@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:chewie/src/center_play_button.dart';
 import 'package:chewie/src/chewie_player.dart';
@@ -7,12 +8,14 @@ import 'package:chewie/src/helpers/utils.dart';
 import 'package:chewie/src/material/material_progress_bar.dart';
 import 'package:chewie/src/material/widgets/options_dialog.dart';
 import 'package:chewie/src/material/widgets/playback_speed_dialog.dart';
+import 'package:chewie/src/material/widgets/yt_quality_dialog.dart';
 import 'package:chewie/src/models/option_item.dart';
 import 'package:chewie/src/models/subtitle_model.dart';
 import 'package:chewie/src/notifiers/index.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart' as YTE;
 
 class MaterialControls extends StatefulWidget {
   const MaterialControls({
@@ -44,6 +47,7 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
 
   final barHeight = 48.0 * 1.5;
   final marginSize = 5.0;
+  late YTE.MuxedStreamInfo? selectedQuality;
 
   late VideoPlayerController controller;
   ChewieController? _chewieController;
@@ -131,6 +135,8 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
     final oldController = _chewieController;
     _chewieController = ChewieController.of(context);
     controller = chewieController.videoPlayerController;
+
+    selectedQuality = chewieController.selectedYouTubeVideoQuality;
 
     if (oldController != chewieController) {
       _dispose();
@@ -299,6 +305,10 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
                     if (chewieController.isLive) const Expanded(child: Text('LIVE')) else _buildPosition(iconColor),
                     if (chewieController.allowMuting) _buildMuteButton(controller),
                     const Spacer(),
+                    if (chewieController.youTubeVideoQualities != null &&
+                        chewieController.youTubeVideoQualities!.isNotEmpty &&
+                        selectedQuality != null)
+                      _buildYTQualityButton(controller, selectedQuality!),
                     if (chewieController.allowFullScreen) _buildExpandButton(),
                   ],
                 ),
@@ -349,6 +359,37 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
             ),
             child: Icon(
               _latestValue.volume > 0 ? Icons.volume_up : Icons.volume_off,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  GestureDetector _buildYTQualityButton(
+    VideoPlayerController controller,
+    YTE.MuxedStreamInfo selectedQuality,
+  ) {
+    return GestureDetector(
+      onTap: () async {
+        await _onYTQualityButtonTap(selectedQuality);
+      },
+      child: AnimatedOpacity(
+        opacity: notifier.hideStuff ? 0.0 : 1.0,
+        duration: const Duration(milliseconds: 300),
+        child: Container(
+          height: barHeight + (chewieController.isFullScreen ? 15.0 : 0),
+          margin: const EdgeInsets.only(right: 12.0),
+          padding: const EdgeInsets.only(
+            left: 8.0,
+            right: 8.0,
+          ),
+          child: Center(
+            child: Icon(
+              selectedQuality.videoQuality == YTE.VideoQuality.high720
+                  ? Icons.high_quality
+                  : Icons.high_quality_outlined,
               color: Colors.white,
             ),
           ),
@@ -412,6 +453,28 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
         onPressed: _playPause,
       ),
     );
+  }
+
+  Future<void> _onYTQualityButtonTap(YTE.MuxedStreamInfo selectedQuality) async {
+    _hideTimer?.cancel();
+
+    final chosenQuality = await showModalBottomSheet<YTE.MuxedStreamInfo>(
+      context: context,
+      isScrollControlled: true,
+      useRootNavigator: chewieController.useRootNavigator,
+      builder: (context) => YTQualityDialog(
+        qualities: chewieController.youTubeVideoQualities ?? UnmodifiableListView([]),
+        selected: selectedQuality,
+      ),
+    );
+
+    if (chosenQuality != null) {
+      updateYTVideoQuality(chosenQuality);
+    }
+
+    if (_latestValue.isPlaying) {
+      _startHideTimer();
+    }
   }
 
   Future<void> _onSpeedButtonTap() async {
@@ -504,6 +567,14 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
       notifier.hideStuff = false;
       _displayTapped = true;
     });
+  }
+
+  Future<void> updateYTVideoQuality(YTE.MuxedStreamInfo _selectedQuality) async {
+    setState(() {
+      selectedQuality = _selectedQuality;
+    });
+
+    chewieController.onYTVideoQualityChanged?.call(context, _selectedQuality);
   }
 
   Future<void> _initialize() async {
