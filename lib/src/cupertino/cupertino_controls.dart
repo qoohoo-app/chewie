@@ -287,7 +287,8 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
                           if (chewieController.showSubtitleToggle) _buildSubtitleToggle(iconColor, barHeight),
                           if (chewieController.youTubeVideoQualities != null &&
                               chewieController.youTubeVideoQualities!.isNotEmpty &&
-                              selectedQuality != null)
+                              selectedQuality != null &&
+                              !chewieController.isFullScreen)
                             _buildYTQualityButton(controller, iconColor, barHeight, selectedQuality!),
                           if (chewieController.allowPlaybackSpeedChanging)
                             _buildSpeedButton(controller, iconColor, barHeight),

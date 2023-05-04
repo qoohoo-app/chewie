@@ -307,7 +307,8 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
                     const Spacer(),
                     if (chewieController.youTubeVideoQualities != null &&
                         chewieController.youTubeVideoQualities!.isNotEmpty &&
-                        selectedQuality != null)
+                        selectedQuality != null &&
+                        !chewieController.isFullScreen)
                       _buildYTQualityButton(controller, selectedQuality!),
                     if (chewieController.allowFullScreen) _buildExpandButton(),
                   ],
