@@ -462,6 +462,12 @@ class _MaterialControlsState extends State<MaterialControls> with SingleTickerPr
       context: context,
       isScrollControlled: true,
       useRootNavigator: chewieController.useRootNavigator,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
+      ),
+      backgroundColor: const Color(0xff1B1D20),
       builder: (context) => YTQualityDialog(
         qualities: chewieController.youTubeVideoQualities ?? UnmodifiableListView([]),
         selected: selectedQuality,

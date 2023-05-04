@@ -17,8 +17,6 @@ class YTQualityDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color selectedColor = Theme.of(context).primaryColor;
-
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -39,7 +37,7 @@ class YTQualityDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Text(
-                'Video Quality',
+                'Video quality',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,

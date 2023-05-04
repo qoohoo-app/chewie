@@ -606,10 +606,16 @@ class _CupertinoControlsState extends State<CupertinoControls> with SingleTicker
       onTap: () async {
         _hideTimer?.cancel();
 
-        final chosenQuality = await showCupertinoModalPopup<YTE.MuxedStreamInfo>(
+        final chosenQuality = await showModalBottomSheet<YTE.MuxedStreamInfo>(
           context: context,
-          semanticsDismissible: true,
+          isScrollControlled: true,
           useRootNavigator: chewieController.useRootNavigator,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(20),
+            ),
+          ),
+          backgroundColor: const Color(0xff1B1D20),
           builder: (context) => _YTPlaybackQualityDialog(
             qualities: chewieController.youTubeVideoQualities ?? UnmodifiableListView([]),
             selected: selectedQuality,
@@ -977,23 +983,81 @@ class _YTPlaybackQualityDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final selectedColor = CupertinoTheme.of(context).primaryColor;
 
-    return CupertinoActionSheet(
-      actions: _qualities
-          .map(
-            (e) => CupertinoActionSheetAction(
-              onPressed: () {
-                Navigator.of(context).pop(e);
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (e == _selected) Icon(Icons.check, size: 20.0, color: selectedColor),
-                  Text(e.qualityLabel),
-                ],
-              ),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            vertical: 24,
+            horizontal: 20,
+          ).copyWith(
+            bottom: 28,
+          ),
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(20),
             ),
-          )
-          .toList(),
+            color: Color(0xff1B1D20),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Video quality',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  height: 24 / 18,
+                  color: Color(0xffFFFFFF),
+                ),
+              ),
+              const SizedBox(height: 24),
+              ..._qualities
+                  .map<Widget>(
+                    (e) => Column(
+                      children: [
+                        ListTile(
+                          onTap: () {
+                            Navigator.of(context).pop(e);
+                          },
+                          title: Text(
+                            e.qualityLabel,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: (e == _selected) ? FontWeight.w700 : FontWeight.w500,
+                              height: 22 / 16,
+                              color: const Color(0xffFFFFFF),
+                            ),
+                          ),
+                          trailing: (e == _selected)
+                              ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: Icon(
+                                    Icons.check,
+                                    size: 24.0,
+                                    color: Color(0xff4666E7),
+                                  ),
+                                )
+                              : const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                ),
+                        ),
+                        if (_qualities.indexOf(e) != _qualities.length - 1)
+                          Container(
+                            height: 1,
+                            width: MediaQuery.of(context).size.width,
+                            color: Colors.white.withOpacity(0.05),
+                          ),
+                      ],
+                    ),
+                  )
+                  .toList(),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
