@@ -31,34 +31,3 @@ String formatDuration(Duration position) {
 
   return formattedTime;
 }
-
-extension VideoQualityName on YTE.VideoQuality {
-  String get toShortString {
-    switch (this) {
-      case YTE.VideoQuality.unknown:
-        return 'Unknown';
-      case YTE.VideoQuality.low144:
-        return '144p';
-      case YTE.VideoQuality.low240:
-        return '240p';
-      case YTE.VideoQuality.medium360:
-        return '360p';
-      case YTE.VideoQuality.medium480:
-        return '480p';
-      case YTE.VideoQuality.high720:
-        return '720p';
-      case YTE.VideoQuality.high1080:
-        return '1080p';
-      case YTE.VideoQuality.high1440:
-        return '1440p';
-      case YTE.VideoQuality.high2160:
-        return '2160p';
-      case YTE.VideoQuality.high3072:
-        return '3072p';
-      case YTE.VideoQuality.high4320:
-        return '4320p';
-      default:
-        return '';
-    }
-  }
-}
