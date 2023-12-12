@@ -14,7 +14,10 @@ dependencies:
   provider: '>=5.0.0 <7.0.0'
   video_player: ^2.4.4
   wakelock: ^0.6.1+2
-  youtube_explode_dart: ^1.12.4
+  youtube_explode_dart:
+    git:
+        url: git@github.com:qoohoo-app/youtube_explode_dart.git
+        ref: "1c98db5493b0f814cda978d88db35cdf627db576"
 
 dev_dependencies:
   flutter_test:
