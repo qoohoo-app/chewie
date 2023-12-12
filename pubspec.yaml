@@ -17,7 +17,7 @@ dependencies:
   youtube_explode_dart:
     git:
         url: git@github.com:qoohoo-app/youtube_explode_dart.git
-        ref: "1c98db5493b0f814cda978d88db35cdf627db576"
+        ref: "0ff2ecc5989f55fe164b75e51dae49013e18c0c9"
 
 dev_dependencies:
   flutter_test:
